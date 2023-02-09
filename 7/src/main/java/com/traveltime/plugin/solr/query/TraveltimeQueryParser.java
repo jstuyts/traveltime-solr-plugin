@@ -13,12 +13,14 @@ public class TraveltimeQueryParser extends QParser {
    private final ProtoFetcher fetcher;
    private final String cacheName;
    private final String paramPrefix;
+   private final boolean isFilteringDisabled;
 
-   public TraveltimeQueryParser(String qstr, SolrParams localParams, SolrParams params, SolrQueryRequest req, ProtoFetcher fetcher, String cacheName, String paramPrefix) {
+   public TraveltimeQueryParser(String qstr, SolrParams localParams, SolrParams params, SolrQueryRequest req, ProtoFetcher fetcher, String cacheName, String paramPrefix, boolean isFilteringDisabled) {
       super(qstr, localParams, params, req);
       this.fetcher = fetcher;
       this.cacheName = cacheName;
       this.paramPrefix = paramPrefix;
+      this.isFilteringDisabled = isFilteringDisabled;
    }
 
    private String getBestParam(String name) throws SyntaxError {
@@ -58,7 +60,7 @@ public class TraveltimeQueryParser extends QParser {
             getBestParam(TraveltimeQueryParameters.MODE),
             getBestParam(TraveltimeQueryParameters.COUNTRY)
       );
-      return new TraveltimeSearchQuery(params, weight, fetcher, cacheName);
+      return new TraveltimeSearchQuery(params, weight, fetcher, cacheName, isFilteringDisabled);
    }
 
 }

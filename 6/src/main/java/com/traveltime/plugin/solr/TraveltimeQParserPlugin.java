@@ -14,6 +14,7 @@ public class TraveltimeQParserPlugin extends QParserPlugin {
    public static String PARAM_PREFIX = "traveltime_";
    private String cacheName = RequestCache.NAME;
    private String paramPrefix = PARAM_PREFIX;
+   private boolean isFilteringDisabled = false;
 
    @Override
    public void init(NamedList args) {
@@ -22,6 +23,9 @@ public class TraveltimeQParserPlugin extends QParserPlugin {
 
       Object prefix = args.get("prefix");
       if (prefix != null) paramPrefix = prefix.toString();
+
+      Object filteringDisabled = args.get("filtering_disabled");
+      if (filteringDisabled != null) this.isFilteringDisabled = Boolean.parseBoolean(filteringDisabled.toString());
 
       Object uriVal = args.get("api_uri");
       URI uri = null;
@@ -40,7 +44,8 @@ public class TraveltimeQParserPlugin extends QParserPlugin {
                                        req,
                                        FetcherSingleton.INSTANCE.getFetcher(),
                                        cacheName,
-                                       paramPrefix
+                                       paramPrefix,
+                                       isFilteringDisabled
       );
    }
 

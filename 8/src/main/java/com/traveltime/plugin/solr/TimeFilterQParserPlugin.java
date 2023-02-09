@@ -19,6 +19,8 @@ public class TimeFilterQParserPlugin extends QParserPlugin {
 
    private String paramPrefix = PARAM_PREFIX;
 
+   private boolean isFilteringDisabled = false;
+
    private static final Integer DEFAULT_LOCATION_SIZE_LIMIT = 2000;
 
    @Override
@@ -28,6 +30,9 @@ public class TimeFilterQParserPlugin extends QParserPlugin {
 
       Object prefix = args.get("prefix");
       if (prefix != null) paramPrefix = prefix.toString();
+
+      Object filteringDisabled = args.get("filtering_disabled");
+      if (filteringDisabled != null) this.isFilteringDisabled = Boolean.parseBoolean(filteringDisabled.toString());
 
       Object uriVal = args.get("api_uri");
       URI uri = null;
@@ -51,7 +56,8 @@ public class TimeFilterQParserPlugin extends QParserPlugin {
                                        req,
                                        JsonFetcherSingleton.INSTANCE.getFetcher(),
                                        cacheName,
-                                       paramPrefix
+                                       paramPrefix,
+                                       isFilteringDisabled
       );
    }
 

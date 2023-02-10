@@ -118,11 +118,11 @@ public class TraveltimeDelegatingCollector<Params extends QueryParams> extends D
       while (collectedDocs.nextDoc() != DocIdSetIterator.NO_MORE_DOCS) {
          int globalDoc = collectedDocs.docID();
 
-         while (globalDoc > contextBaseEnd[currentContextIndex]) {
+         while (currentContextIndex < contexts.length && globalDoc > contextBaseEnd[currentContextIndex]) {
             currentContextIndex++;
          }
 
-         if (isFilteringDisabled || pointToTime.containsKey(globalDoc2Coords.get(globalDoc))) {
+         if (currentContextIndex < contexts.length && contexts[currentContextIndex] != null && (isFilteringDisabled || pointToTime.containsKey(globalDoc2Coords.get(globalDoc)))) {
             int contextDoc = globalDoc - contextBaseStart[currentContextIndex];
             leafDelegate = delegate.getLeafCollector(contexts[currentContextIndex]);
             leafDelegate.setScorer(forwardingScorer);

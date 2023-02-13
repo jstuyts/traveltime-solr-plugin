@@ -66,8 +66,8 @@ public class TraveltimeDelegatingCollector<Params extends QueryParams> extends D
       if (context.ord != 0) contextBaseEnd[context.ord - 1] = context.docBase - 1;
       if (context.ord == contexts.length - 1) contextBaseEnd[context.ord] = maxDoc;
 
-      docBase = context.docBase;
       coords = DocValues.getSortedNumeric(context.reader(), params.getField());
+      super.doSetNextReader(context);
    }
 
    @Override
@@ -118,11 +118,11 @@ public class TraveltimeDelegatingCollector<Params extends QueryParams> extends D
       while (collectedDocs.nextDoc() != DocIdSetIterator.NO_MORE_DOCS) {
          int globalDoc = collectedDocs.docID();
 
-         while (currentContextIndex < contexts.length && globalDoc > contextBaseEnd[currentContextIndex]) {
+         while (globalDoc > contextBaseEnd[currentContextIndex]) {
             currentContextIndex++;
          }
 
-         if (currentContextIndex < contexts.length && contexts[currentContextIndex] != null && (isFilteringDisabled || pointToTime.containsKey(globalDoc2Coords.get(globalDoc)))) {
+         if (isFilteringDisabled || pointToTime.containsKey(globalDoc2Coords.get(globalDoc))) {
             int contextDoc = globalDoc - contextBaseStart[currentContextIndex];
             leafDelegate = delegate.getLeafCollector(contexts[currentContextIndex]);
             leafDelegate.setScorer(forwardingScorer);
